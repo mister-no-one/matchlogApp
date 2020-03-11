@@ -1,24 +1,67 @@
-var app = {
-    // Application Constructor
-    initialize: function() {
-        document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-    },
+var score = 0;
 
-    onDeviceReady: function() {
-        this.receivedEvent('deviceready');
-    },
+document.querySelector(".addOne").addEventListener('click',function(){
+    console.log('+1 point');
+    score++;
+    document.querySelector(".score").innerHTML = score;
+});
 
-    // Update DOM on a Received Event
-    receivedEvent: function(id) {
-        var parentElement = document.getElementById(id);
-        var listeningElement = parentElement.querySelector('.listening');
-        var receivedElement = parentElement.querySelector('.received');
+document.querySelector(".addTwo").addEventListener('click',function(){
+    console.log('+3 points');
+    score += 3;
+    document.querySelector(".score").innerHTML = score;
+});
 
-        listeningElement.setAttribute('style', 'display:none;');
-        receivedElement.setAttribute('style', 'display:block;');
 
-        console.log('Received Event: ' + id);
+
+// Base
+var db = null;
+
+document.addEventListener('deviceready',function(event){
+
+ if (window.cordova.platformId === 'browser') {
+    db = window.openDatabase('MatchLog', '1.0', 'Data', 2*1024*1024);
+    console.log("Opening browser database"); } 
+    else {
+        db = window.sqlitePlugin.openDatabase({name: 'MatchLog.db', location: 'default'});
+        console.log("Opening mobile (plugin) database");
     }
-};
 
-app.initialize();
+    // db ...
+    db.transaction(function(tx) {
+        tx.executeSql('CREATE TABLE IF NOT EXISTS MatchLog (dateTime, score, teamid)');
+        tx.executeSql('INSERT INTO MatchLog VALUES (?,?,?,?)', [1,123, 101, 1]);
+    }, function(error) {
+        console.log('Transaction ERROR: ' + error.message);
+    }, function() {
+        console.log('Populated database OK');
+    });
+
+
+});
+
+
+// var app = {
+//     // Application Constructor
+//     initialize: function() {
+//         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
+//     },
+
+//     onDeviceReady: function() {
+//         this.receivedEvent('deviceready');
+//     },
+
+//     // Update DOM on a Received Event
+//     receivedEvent: function(id) {
+//         var parentElement = document.getElementById(id);
+//         var listeningElement = parentElement.querySelector('.listening');
+//         var receivedElement = parentElement.querySelector('.received');
+
+//         listeningElement.setAttribute('style', 'display:none;');
+//         receivedElement.setAttribute('style', 'display:block;');
+
+//         console.log('Received Event: ' + id);
+//     }
+// };
+
+// app.initialize();
