@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; script-src * data: 'unsafe-inline' 'unsafe-eval';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:; script-src * data: 'unsafe-inline' 'unsafe-eval';">
     <meta name="format-detection" content="telephone=no">
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport" content="initial-scale=1, width=device-width, viewport-fit=cover">
@@ -13,8 +13,13 @@
         <header>
             <h1>Score Games</h1>
         </header>
+
         <div id="deviceready">
 
+            <form>
+            <input type="text" name="teamInput">
+            <input type="submit" name="ajouter">
+            </form>
             <div id="left">
                 <h2 class="team">Chicago Bulls</h2>
                 <div id="scoreTeamOne"></div>
@@ -28,6 +33,14 @@
                 <button class="addScore" id="addOneToTeamTwo" data-score="1" data-team="2">+1</button>
                 <button class="addScore" id="addThreeToTeamTwo" data-score="3" data-team="2">+3</button>
             </div>
+
+            <ul>
+                <li class="match-log">
+                    <span class="date"></span>
+                    <span class="points"></span>
+                    <span class="teamid"></span>
+                </li>
+            </ul>
 
         </div>
     </div>
