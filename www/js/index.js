@@ -4,13 +4,29 @@ document.addEventListener('deviceready',function(event){
 
     var x = document.querySelectorAll(".addScore");
 
+
+    var buttonTeam = document.querySelector('.submitTeam');
+
+    buttonTeam.addEventListener('click',function(){
+        var inputTeam = document.querySelector('.inputTeam').value;
+
+        if(inputTeam.length > 3){
+
+            addTeam(inputTeam);
+
+        }
+
+        console.log(inputTeam);
+
+    });
+
 // ADD SCORE ON TEAM
 for (i = 0; i < x.length; i++) {
     x[i].addEventListener('click', function(){
-       var score = this.getAttribute("data-score");
-       var team = this.getAttribute("data-team");
-       addScore(score,team);
-   });
+     var score = this.getAttribute("data-score");
+     var team = this.getAttribute("data-team");
+     addScore(score,team);
+ });
 }
 
 dateNow = Date.now();
@@ -35,9 +51,17 @@ function convertDate(timeStamp){
     return convdataTime;
 }
 
+function addTeam(inputTeam){
+    console.log(inputTeam);
+    db.transaction(function(tx) {
+    tx.executeSql('INSERT INTO Team (name) VALUES(?)', [inputTeam]);
+});
+}
+
+
 db.transaction(function(tx) {
 
- tx.executeSql('SELECT dateTime, score, teamid FROM MatchLog', [], function(tx,result){
+   tx.executeSql('SELECT dateTime, score, teamid FROM MatchLog', [], function(tx,result){
 
     var baseElement = document.querySelector('.match-log');
 
@@ -55,6 +79,7 @@ db.transaction(function(tx) {
 });
 });
 
+
 // Base
 var db = null;
 
@@ -71,9 +96,6 @@ if (window.cordova.platformId === 'browser') {
     db.transaction(function(tx) {
         tx.executeSql('CREATE TABLE IF NOT EXISTS MatchLog (id INTEGER PRIMARY KEY, dateTime, score, teamid)');
         tx.executeSql('CREATE TABLE IF NOT EXISTS Team (id INTEGER PRIMARY KEY, name)');
-        tx.executeSql('INSERT INTO Team (name) VALUES (?)', ["Lakers"]);
-        tx.executeSql('INSERT INTO Team (name) VALUES (?)', ["Chicago Bulls"]);
-
     }, function(error) {
         console.log('Transaction ERROR: ' + error.message);
     }, function() {
