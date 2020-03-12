@@ -1,16 +1,47 @@
-var score = 0;
+document.addEventListener('deviceready',function(event){
 
-function addPoints(score){
-    document.querySelector(".addOne").addEventListener('click',function(){
-        console.log('+1 point');
-        score++;
-        db.transaction(function(tx) {
-            tx.executeSql('INSERT INTO MatchLog (dateTime, score, teamid) VALUES(?,?,?)', ['2020-09-21', 1 , 1 ]);
-        }
+    var score = 0;
+
+    var x = document.querySelectorAll(".addScore");
+
+// ADD SCORE ON TEAM
+for (i = 0; i < x.length; i++) {
+    x[i].addEventListener('click', function(){
+     var score = this.getAttribute("data-score");
+     var team = this.getAttribute("data-team");
+     addScore(score,team);
+ });
+}
+
+dateNow = Date.now();
+
+// FUNCTIONS
+function addScore(score,team){
+    db.transaction(function(tx) {
+        tx.executeSql('INSERT INTO MatchLog (dateTime, score, teamid) VALUES(?,?,?)', [Date.now(), score , team ]);
     });
+}
 
-// FUNCTION POUR INSERTION EN BASE
-// JUSTE REQUETE  tx.executeSql('INSERT INTO MatchLog (dateTime, score, teamid) VALUES(?,?,?)', ['2020-09-21', 1 , 1 ]);
+function convertDate(timeStamp){
+    var date = new Date(test);
+    var months_arr = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    var seconds = "0" + date.getSeconds();
+    var minutes = "0" + date.getMinutes();
+    var hours = date.getHours();
+    var day = date.getDate();
+    var month = months_arr[date.getMonth()];
+    var year = date.getFullYear();
+    var convdataTime = month+'-'+day+'-'+year+' '+hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    return convdataTime;
+}
+
+db.transaction(function(tx) {
+   var test = tx.executeSql('SELECT dateTime, score, teamid FROM MatchLog');
+});
+
+console.log(test);
+
+});
 
 
 
@@ -18,35 +49,13 @@ function addPoints(score){
 
 
 
-    document.querySelector(".addTwo").addEventListener('click',function(){
-        console.log('+3 points');
-        score += 3;
-    });
 
-    document.querySelector(".score").innerHTML = score;
-};
-
-addPoints(score);
-console.log(score);
-
-// document.querySelector(".addOne").addEventListener('click',function(){
-//     console.log('+1 point');
-//     score++;
-//     document.querySelector(".score").innerHTML = score;
-// });
-
-// document.querySelector(".addTwo").addEventListener('click',function(){
-//     console.log('+3 points');
-//     score += 3;
-//     document.querySelector(".score").innerHTML = score;
-// });
 
 // Base
 var db = null;
 
-document.addEventListener('deviceready',function(event){
 
-   if (window.cordova.platformId === 'browser') {
+if (window.cordova.platformId === 'browser') {
     db = window.openDatabase('ScoreGames', '1.0', 'Data', 2*1024*1024);
     console.log("Opening browser database"); } 
     else {
@@ -63,30 +72,3 @@ document.addEventListener('deviceready',function(event){
     }, function() {
         console.log('Populated database OK');
     });
-});
-
-
-// var app = {
-//     // Application Constructor
-//     initialize: function() {
-//         document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
-//     },
-
-//     onDeviceReady: function() {
-//         this.receivedEvent('deviceready');
-//     },
-
-//     // Update DOM on a Received Event
-//     receivedEvent: function(id) {
-//         var parentElement = document.getElementById(id);
-//         var listeningElement = parentElement.querySelector('.listening');
-//         var receivedElement = parentElement.querySelector('.received');
-
-//         listeningElement.setAttribute('style', 'display:none;');
-//         receivedElement.setAttribute('style', 'display:block;');
-
-//         console.log('Received Event: ' + id);
-//     }
-// };
-
-// app.initialize();
